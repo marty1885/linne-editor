@@ -8,6 +8,7 @@ class MainWindow;
 }
 
 class LPianoKey;
+class LPianoKeyBoard;
 
 class MainWindow : public QMainWindow
 {
@@ -22,6 +23,7 @@ private:
 
 protected:
 	LPianoKey* pianoKey;
+	LPianoKeyBoard* keyBoard;
 };
 
 #endif // MAINWINDOW_H

@@ -4,13 +4,13 @@
 #include <QDebug>
 
 LPianoKey::LPianoKey(QWidget *parent) :
-	QWidget(parent)
+	QAbstractButton(parent)
 {
 	isBlackKey = false;
 	isHighlighted = false;
 	textDisplayProperty = Linne::Always;
 	highlightOnMouseEnter = true;
-	blackKeyLenghtRatio = 3.0f/5;
+	blackKeyLenghtRatio = 11.0f/20;
 	textOffsetRatio = 1.0f/9;
 }
 
@@ -55,7 +55,7 @@ void LPianoKey::paintEvent(QPaintEvent *event)
 	if(shouldDisplay(isHighlighted, textDisplayProperty) == true)
 	{
 		QFont font = painter.font();
-		font.setPixelSize(height()-3);
+		font.setPixelSize(height()*(9.0f/13));
 		painter.setFont(font);
 		painter.setPen(QColor::fromHsv(0,0,98));
 

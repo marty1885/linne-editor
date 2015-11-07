@@ -14,9 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         MainWindow.cpp \
-    LPianoKey.cpp
+    LPianoKey.cpp \
+    LPianoKeyBoard.cpp
 
 HEADERS  += MainWindow.h \
-    LPianoKey.h
+    LPianoKey.h \
+    LinneEditor.h \
+    LPianoKeyBoard.h
 
 FORMS    += MainWindow.ui

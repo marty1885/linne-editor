@@ -2,6 +2,7 @@
 #include "ui_MainWindow.h"
 
 #include <LPianoKey.h>
+#include <LPianoKeyBoard.h>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -20,10 +21,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	//Widget testing
 	pianoKey = new LPianoKey(this);
-	pianoKey->setGeometry(10,10,100,15);
+	pianoKey->setGeometry(10,10,83,15);
 	pianoKey->setText("E3");
 	pianoKey->setTextDisplayProperty(Linne::Highlighted);
 
+	keyBoard = new LPianoKeyBoard(this);
+	keyBoard->setGeometry(200,10,83,300);
 }
 
 MainWindow::~MainWindow()
