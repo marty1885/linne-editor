@@ -10,6 +10,8 @@ LPianoKey::LPianoKey(QWidget *parent) :
 	isHighlighted = false;
 	textDisplayProperty = Linne::Always;
 	highlightOnMouseEnter = true;
+	blackKeyLenghtRatio = 3.0f/5;
+	textOffsetRatio = 1.0f/9;
 }
 
 void LPianoKey::setText(QString str)
@@ -37,9 +39,6 @@ void LPianoKey::paintEvent(QPaintEvent *event)
 	painter.setPen(QColor::fromHsv(0,0,219));
 	painter.drawLine(0,height()-1,width()-1, height()-1);
 	painter.drawLine(width()-1, 0,width()-1, height());
-
-	const float blackKeyLenghtRatio = 3.0f/5;
-	const float textOffsetRatio = 1.0f/9;
 
 	if(isBlackKey == true)
 	{
@@ -100,6 +99,16 @@ void LPianoKey::setHighLight(bool highlight)
 
 	if(changed == true)
 		emit highlightClanged(highlight);
+}
+
+void LPianoKey::setBlackKeyLenghtRatio(float ratio)
+{
+	blackKeyLenghtRatio = ratio;
+}
+
+void LPianoKey::setTextOffsetRatio(float ratio)
+{
+	textOffsetRatio = ratio;
 }
 
 bool LPianoKey::highlight()

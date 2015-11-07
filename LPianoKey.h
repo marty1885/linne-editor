@@ -43,6 +43,8 @@ public:
 	void setTextDisplayProperty(Linne::DisplayProperty prop);
 	void setHighlightOnMouseEnter(bool autoHighLight);
 	void setHighLight(bool highlight);
+	void setBlackKeyLenghtRatio(float ratio);
+	void setTextOffsetRatio(float ratio);
 
 	bool highlight();
 
@@ -58,7 +60,8 @@ protected:
 	bool isHighlighted;
 	Linne::DisplayProperty textDisplayProperty;
 	bool highlightOnMouseEnter;
-
+	float blackKeyLenghtRatio;
+	float textOffsetRatio;
 	void paintEvent(QPaintEvent* event);
 
 	void enterEvent(QEvent* event);
