@@ -20,8 +20,8 @@ public:
 
 	void resizeEvent(QResizeEvent *event);
 	void setKeyNum(int num);
-
 	void setKeyOffset(int offset);
+	void setKeyHeight(int height);
 
 signals:
 	void keyClicked(int id);
@@ -34,6 +34,7 @@ protected:
 	QGraphicsScene* scene;
 
 	int keyOffset;
+	int keyHeight;
 
 	void buildKey(int id, QString& name, bool& blackKey, Linne::DisplayProperty& prop);
 	void pushKey();

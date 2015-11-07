@@ -8,6 +8,7 @@ LPianoKeyBoard::LPianoKeyBoard(QWidget *parent) :
 	LGraphicsView(parent)
 {
 	keyOffset = 0;
+	keyHeight = 14;
 
 	setStyleSheet("QGraphicsView { border-style: none; }");
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -25,7 +26,7 @@ void LPianoKeyBoard::resizeEvent(QResizeEvent *event)
 {
 	int size = keys.size();
 	for(int i=0;i<size;i++)
-		keys[i]->setGeometry(QRect(0,height()-(i+1)*15,width(),15));
+		keys[i]->setGeometry(QRect(0,height()-(i+1)*keyHeight,width(),keyHeight));
 	translate(0,0);
 }
 
@@ -58,6 +59,12 @@ void LPianoKeyBoard::setKeyOffset(int offset)
 		key->setBlackKey(isBlackKey);
 		key->setTextDisplayProperty(prop);
 	}
+}
+
+void LPianoKeyBoard::setKeyHeight(int height)
+{
+	keyHeight = height;
+	resizeEvent(NULL);
 }
 
 void LPianoKeyBoard::onKeyClicked()
@@ -93,7 +100,7 @@ void LPianoKeyBoard::pushKey()
 	buildKey(id, keyName, isBlackKey, prop);
 
 	scene->addWidget(key);
-	key->setGeometry(QRect(0,height()-(index+1)*15,width(),15));
+	key->setGeometry(QRect(0,height()-(index+1)*keyHeight,width(),keyHeight));
 	key->setText(keyName);
 	key->setBlackKey(isBlackKey);
 	key->setTextDisplayProperty(prop);

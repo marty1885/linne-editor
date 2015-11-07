@@ -3,6 +3,7 @@
 
 #include <LPianoKey.h>
 #include <LPianoKeyBoard.h>
+#include <LPianoNote.h>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -26,8 +27,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	pianoKey->setTextDisplayProperty(Linne::Highlighted);
 
 	keyBoard = new LPianoKeyBoard(this);
-	keyBoard->setGeometry(200,10,83,300);
+	keyBoard->setGeometry(200,10,83,280);
 	keyBoard->setKeyNum(20);
+
+	note = new LPianoNote(this);
+	note->setGeometry(10,30,83,13);
 }
 
 MainWindow::~MainWindow()

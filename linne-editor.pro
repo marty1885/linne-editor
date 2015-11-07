@@ -16,12 +16,16 @@ SOURCES += main.cpp\
         MainWindow.cpp \
     LPianoKey.cpp \
     LPianoKeyBoard.cpp \
-    LGraphicsView.cpp
+    LGraphicsView.cpp \
+    LPianoNote.cpp \
+    LPianoPlain.cpp
 
 HEADERS  += MainWindow.h \
     LPianoKey.h \
     LinneEditor.h \
     LPianoKeyBoard.h \
-    LGraphicsView.h
+    LGraphicsView.h \
+    LPianoNote.h \
+    LPianoPlain.h
 
 FORMS    += MainWindow.ui
