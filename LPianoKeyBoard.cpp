@@ -5,7 +5,7 @@
 #include <QDebug>
 
 LPianoKeyBoard::LPianoKeyBoard(QWidget *parent) :
-	QGraphicsView(parent)
+	LGraphicsView(parent)
 {
 	keyOffset = 0;
 
@@ -16,7 +16,7 @@ LPianoKeyBoard::LPianoKeyBoard(QWidget *parent) :
 	scene = new QGraphicsScene(this);
 	setScene(scene);
 
-
+	//12 keys on default
 	for(int i=0;i<12;i++)
 		pushKey();
 }
@@ -26,7 +26,20 @@ void LPianoKeyBoard::resizeEvent(QResizeEvent *event)
 	int size = keys.size();
 	for(int i=0;i<size;i++)
 		keys[i]->setGeometry(QRect(0,height()-(i+1)*15,width(),15));
-	setSceneRect(0,0,width(),height());
+	translate(0,0);
+}
+
+void LPianoKeyBoard::setKeyNum(int num)
+{
+	int keyNum = keys.size();
+	if(keyNum > num)
+	{
+		for(int i=0;i<keyNum-num;i++)
+			popKey();
+	}
+	else
+		for(int i=0;i<num-keyNum;i++)
+			pushKey();
 }
 
 void LPianoKeyBoard::setKeyOffset(int offset)
@@ -52,7 +65,7 @@ void LPianoKeyBoard::onKeyClicked()
 	QObject* senderPtr = QObject::sender();
 	LPianoKey* clickedKey = (LPianoKey*)senderPtr;
 	int index = keys.indexOf(clickedKey);
-	qDebug() << index;
+	emit keyClicked(index+keyOffset);
 }
 
 void LPianoKeyBoard::buildKey(int id, QString &name, bool &blackKey, Linne::DisplayProperty &prop)

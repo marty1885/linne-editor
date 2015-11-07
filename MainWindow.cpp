@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	keyBoard = new LPianoKeyBoard(this);
 	keyBoard->setGeometry(200,10,83,300);
+	keyBoard->setKeyNum(20);
 }
 
 MainWindow::~MainWindow()

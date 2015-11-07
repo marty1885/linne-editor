@@ -6,22 +6,25 @@
 #include <QPair>
 
 #include <LinneEditor.h>
+#include <LGraphicsView.h>
 
 //TODO: add a new widget that workes arround QGraphicsView's shitty bugs.
 
 class LPianoKey;
 
-class LPianoKeyBoard : public QGraphicsView
+class LPianoKeyBoard : public LGraphicsView
 {
 	Q_OBJECT
 public:
 	explicit LPianoKeyBoard(QWidget *parent = 0);
 
 	void resizeEvent(QResizeEvent *event);
+	void setKeyNum(int num);
 
 	void setKeyOffset(int offset);
 
 signals:
+	void keyClicked(int id);
 
 public slots:
 	void onKeyClicked();
