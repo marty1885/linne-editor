@@ -11,7 +11,7 @@ public:
 	explicit LGraphicsView(QWidget *parent = 0);
 
 	void translate(qreal dx, qreal dy);
-	void setTranslation(qreal x, qreal y);
+	void translateTo(qreal x, qreal y);
 
 signals:
 

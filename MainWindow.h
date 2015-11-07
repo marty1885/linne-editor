@@ -10,6 +10,7 @@ class MainWindow;
 class LPianoKey;
 class LPianoKeyBoard;
 class LPianoNote;
+class LPianoPlain;
 
 class MainWindow : public QMainWindow
 {
@@ -26,6 +27,7 @@ protected:
 	LPianoKey* pianoKey;
 	LPianoKeyBoard* keyBoard;
 	LPianoNote* note;
+	LPianoPlain* pianoPlain;
 
 };
 

@@ -4,6 +4,7 @@
 #include <LPianoKey.h>
 #include <LPianoKeyBoard.h>
 #include <LPianoNote.h>
+#include <LPianoPlain.h>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -32,6 +33,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	note = new LPianoNote(this);
 	note->setGeometry(10,30,83,13);
+
+	pianoPlain = new LPianoPlain(this);
+	pianoPlain->setGeometry(283,10,260,280);
 }
 
 MainWindow::~MainWindow()

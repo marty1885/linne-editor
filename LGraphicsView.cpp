@@ -12,7 +12,7 @@ void LGraphicsView::translate(qreal dx, qreal dy)
 	setSceneRect(translateVec.x(),translateVec.y(),width(),height());
 }
 
-void LGraphicsView::setTranslation(qreal x, qreal y)
+void LGraphicsView::translateTo(qreal x, qreal y)
 {
 	translateVec = QVector2D(x,y);
 	setSceneRect(translateVec.x(),translateVec.y(),width(),height());
