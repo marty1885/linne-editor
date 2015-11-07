@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	//Widget testing
 	pianoKey = new LPianoKey(this);
 	pianoKey->setGeometry(10,10,100,15);
+	pianoKey->setText("E3");
+	pianoKey->setTextDisplayProperty(Linne::Highlighted);
 
 }
 
