@@ -8,8 +8,6 @@
 #include <LinneEditor.h>
 #include <LGraphicsView.h>
 
-//TODO: add a new widget that workes arround QGraphicsView's shitty bugs.
-
 class LPianoKey;
 
 class LPianoKeyBoard : public LGraphicsView
@@ -22,6 +20,7 @@ public:
 	void setKeyNum(int num);
 	void setKeyOffset(int offset);
 	void setKeyHeight(int height);
+	QVector<LPianoKey*>* keys();
 
 signals:
 	void keyClicked(int id);
@@ -30,7 +29,7 @@ public slots:
 	void onKeyClicked();
 
 protected:
-	QVector<LPianoKey*> keys;
+	QVector<LPianoKey*> pianoKeys;
 	QGraphicsScene* scene;
 
 	int keyOffset;

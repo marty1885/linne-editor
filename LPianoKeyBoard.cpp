@@ -24,15 +24,15 @@ LPianoKeyBoard::LPianoKeyBoard(QWidget *parent) :
 
 void LPianoKeyBoard::resizeEvent(QResizeEvent *event)
 {
-	int size = keys.size();
+	int size = pianoKeys.size();
 	for(int i=0;i<size;i++)
-		keys[i]->setGeometry(QRect(0,height()-(i+1)*keyHeight,width(),keyHeight));
+		pianoKeys[i]->setGeometry(QRect(0,height()-(i+1)*keyHeight,width(),keyHeight));
 	translate(0,0);
 }
 
 void LPianoKeyBoard::setKeyNum(int num)
 {
-	int keyNum = keys.size();
+	int keyNum = pianoKeys.size();
 	if(keyNum > num)
 	{
 		for(int i=0;i<keyNum-num;i++)
@@ -46,10 +46,10 @@ void LPianoKeyBoard::setKeyNum(int num)
 void LPianoKeyBoard::setKeyOffset(int offset)
 {
 	keyOffset = offset;
-	int size = keys.size();
+	int size = pianoKeys.size();
 	for(int i=0;i<size;i++)
 	{
-		LPianoKey* key = keys[i];
+		LPianoKey* key = pianoKeys[i];
 		int id = i + keyOffset;
 		QString keyName;
 		bool isBlackKey;
@@ -67,11 +67,16 @@ void LPianoKeyBoard::setKeyHeight(int height)
 	resizeEvent(NULL);
 }
 
+QVector<LPianoKey *> *LPianoKeyBoard::keys()
+{
+	return &pianoKeys;
+}
+
 void LPianoKeyBoard::onKeyClicked()
 {
 	QObject* senderPtr = QObject::sender();
 	LPianoKey* clickedKey = (LPianoKey*)senderPtr;
-	int index = keys.indexOf(clickedKey);
+	int index = pianoKeys.indexOf(clickedKey);
 	emit keyClicked(index+keyOffset);
 }
 
@@ -90,7 +95,7 @@ void LPianoKeyBoard::buildKey(int id, QString &name, bool &blackKey, Linne::Disp
 
 void LPianoKeyBoard::pushKey()
 {
-	int index = keys.size();
+	int index = pianoKeys.size();
 	LPianoKey* key = new LPianoKey;
 	int id = index + keyOffset;
 
@@ -106,13 +111,13 @@ void LPianoKeyBoard::pushKey()
 	key->setTextDisplayProperty(prop);
 	QObject::connect(key,SIGNAL(clicked()),SLOT(onKeyClicked()));
 
-	keys.push_back(key);
+	pianoKeys.push_back(key);
 }
 
 void LPianoKeyBoard::popKey()
 {
-	LPianoKey* key = keys[keys.size()-1];
-	keys.pop_back();
+	LPianoKey* key = pianoKeys[pianoKeys.size()-1];
+	pianoKeys.pop_back();
 	delete key;
 	resizeEvent(NULL);
 }

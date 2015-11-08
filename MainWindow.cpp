@@ -36,9 +36,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	pianoPlain = new LPianoPlain(this);
 	pianoPlain->setGeometry(283,10,260,280);
+	pianoPlain->setKeyNum(20);
+
+	QObject::connect(pianoPlain,SIGNAL(mouseHoverChanged(int)),SLOT(onPianoPlainHoverChanged(int)));
 }
 
 MainWindow::~MainWindow()
 {
 	delete ui;
+}
+
+void MainWindow::onPianoPlainHoverChanged(int id)
+{
+	static int lastKey = 0;
+	keyBoard->keys()->at(lastKey)->setHighLight(false);
+	keyBoard->keys()->at(id)->setHighLight(true);
+	lastKey = id;
 }

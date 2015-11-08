@@ -20,6 +20,8 @@ public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
+public slots:
+	void onPianoPlainHoverChanged(int id);
 private:
 	Ui::MainWindow *ui;
 
