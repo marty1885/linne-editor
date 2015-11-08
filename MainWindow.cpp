@@ -5,6 +5,9 @@
 #include <LPianoKeyBoard.h>
 #include <LPianoNote.h>
 #include <LPianoPlain.h>
+#include <LPianoRoll.h>
+
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -33,10 +36,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	note = new LPianoNote(this);
 	note->setGeometry(10,30,83,13);
+	note->setText("a");
 
 	pianoPlain = new LPianoPlain(this);
 	pianoPlain->setGeometry(283,10,260,280);
 	pianoPlain->setKeyNum(20);
+
+	pianoRoll = new LPianoRoll(this);
+	pianoRoll->setGeometry(200,330,800,280);
 
 	QObject::connect(pianoPlain,SIGNAL(mouseHoverChanged(int)),SLOT(onPianoPlainHoverChanged(int)));
 }
@@ -49,7 +56,15 @@ MainWindow::~MainWindow()
 void MainWindow::onPianoPlainHoverChanged(int id)
 {
 	static int lastKey = 0;
-	keyBoard->keys()->at(lastKey)->setHighLight(false);
-	keyBoard->keys()->at(id)->setHighLight(true);
-	lastKey = id;
+	if(id >= 0)
+	{
+		keyBoard->keys()[lastKey]->setHighLight(false);
+		keyBoard->keys()[id]->setHighLight(true);
+		lastKey = id;
+	}
+	else
+	{
+		keyBoard->keys()[lastKey]->setHighLight(false);
+		lastKey = 0;
+	}
 }

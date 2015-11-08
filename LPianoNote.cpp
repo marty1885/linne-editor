@@ -16,4 +16,17 @@ void LPianoNote::paintEvent(QPaintEvent *event)
 	QLineF lines[] = {QLineF(0,0,0,height()-1),QLineF(0,height()-1,width()-1,height()-1),
 			QLineF(width()-1,height()-1,width()-1,0),QLineF(width()-1,0,0,0)};
 	painter.drawLines(lines,4);
+
+	QFont font = painter.font();
+	int fontSize = height()*(10.0f/13);
+	font.setPixelSize(fontSize);
+	painter.setFont(font);
+	painter.setPen(Qt::black);
+
+	painter.drawText(3,height()-fontSize-2,width(),height(),Qt::AlignBaseline,displayText);
+}
+
+void LPianoNote::setText(QString str)
+{
+	displayText = str;
 }

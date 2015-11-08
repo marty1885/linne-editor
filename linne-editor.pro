@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     LGraphicsView.cpp \
     LPianoNote.cpp \
     LPianoPlain.cpp \
-    LGraphicsPianoStripItem.cpp
+    LGraphicsPianoStripItem.cpp \
+    LPianoRoll.cpp
 
 HEADERS  += MainWindow.h \
     LPianoKey.h \
@@ -28,6 +29,7 @@ HEADERS  += MainWindow.h \
     LGraphicsView.h \
     LPianoNote.h \
     LPianoPlain.h \
-    LGraphicsPianoStripItem.h
+    LGraphicsPianoStripItem.h \
+    LPianoRoll.h
 
 FORMS    += MainWindow.ui

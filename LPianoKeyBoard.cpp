@@ -26,7 +26,7 @@ void LPianoKeyBoard::resizeEvent(QResizeEvent *event)
 {
 	int size = pianoKeys.size();
 	for(int i=0;i<size;i++)
-		pianoKeys[i]->setGeometry(QRect(0,height()-(i+1)*keyHeight,width(),keyHeight));
+		pianoKeys[i]->setGeometry(QRect(0,(size-i-1)*keyHeight,width(),keyHeight));
 	translate(0,0);
 }
 
@@ -67,9 +67,19 @@ void LPianoKeyBoard::setKeyHeight(int height)
 	resizeEvent(NULL);
 }
 
-QVector<LPianoKey *> *LPianoKeyBoard::keys()
+LPianoKey** LPianoKeyBoard::keys()
 {
-	return &pianoKeys;
+	return &(pianoKeys[0]);
+}
+
+int LPianoKeyBoard::keyNum()
+{
+	return pianoKeys.size();
+}
+
+int LPianoKeyBoard::getKeyHeight()
+{
+	return keyHeight;
 }
 
 void LPianoKeyBoard::onKeyClicked()
@@ -93,6 +103,7 @@ void LPianoKeyBoard::buildKey(int id, QString &name, bool &blackKey, Linne::Disp
 		prop = Linne::Always;
 }
 
+//TODO : check is setGeometry here is correct
 void LPianoKeyBoard::pushKey()
 {
 	int index = pianoKeys.size();
@@ -105,7 +116,7 @@ void LPianoKeyBoard::pushKey()
 	buildKey(id, keyName, isBlackKey, prop);
 
 	scene->addWidget(key);
-	key->setGeometry(QRect(0,height()-(index+1)*keyHeight,width(),keyHeight));
+	key->setGeometry(QRect(0,(index+1)*keyHeight,width(),keyHeight));
 	key->setText(keyName);
 	key->setBlackKey(isBlackKey);
 	key->setTextDisplayProperty(prop);

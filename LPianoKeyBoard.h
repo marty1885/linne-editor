@@ -20,7 +20,10 @@ public:
 	void setKeyNum(int num);
 	void setKeyOffset(int offset);
 	void setKeyHeight(int height);
-	QVector<LPianoKey*>* keys();
+
+	LPianoKey **keys();
+	int keyNum();
+	int getKeyHeight();
 
 signals:
 	void keyClicked(int id);

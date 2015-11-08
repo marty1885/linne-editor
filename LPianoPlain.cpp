@@ -1,8 +1,9 @@
 #include "LPianoPlain.h"
 
-#include <QGraphicsRectItem>
 #include <LinneEditor.h>
 #include <LGraphicsPianoStripItem.h>
+#include <LPianoNote.h>
+
 #include <QMouseEvent>
 #include <QDebug>
 
@@ -11,6 +12,8 @@ LPianoPlain::LPianoPlain(QWidget *parent) :
 {
 	keyHeight = 14;
 	keyOffset = 0;
+	internalLength = 1200;
+	lastHoverId = -1;
 
 	setMouseTracking(true);
 	setStyleSheet("QGraphicsView { border-style: none; }");
@@ -28,7 +31,7 @@ void LPianoPlain::resizeEvent(QResizeEvent *event)
 {
 	int size = pianoStrips.size();
 	for(int i=0;i<size;i++)
-		pianoStrips[i]->setGeometry(0,height()-(i+1)*keyHeight,width(),keyHeight);
+		pianoStrips[i]->setGeometry(0,(size-i-1)*keyHeight,internalLength,keyHeight);
 	translate(0,0);
 }
 
@@ -66,15 +69,58 @@ void LPianoPlain::setKeyOffset(int offset)
 
 void LPianoPlain::mouseMoveEvent(QMouseEvent *event)
 {
-	static int lastId = -1;
 	int size = pianoStrips.size();
-	int id = size - event->y()/keyHeight + keyOffset-1;
+	int id = 0;
+	bool found = false;
+	qDebug() << translateVec;
+	for(int i=0;i<size;i++)
+	{
+		LGraphicsPianoStripItem* item = pianoStrips[i];
+		QRectF rect = item->sceneBoundingRect();
+		QVector2D posVec(event->x()+translateVec.x(),event->y()+translateVec.y());
+		QPoint point = mapFromGlobal(QPoint(posVec.x(),posVec.y()));
+		QRectF pos(point.x(),point.y(),point.x(),point.y());
+		qDebug() << point;
+		if(rect.intersects(pos))//TODO: This ignores any transformation
+		{
+			found = true;
+			id = i+keyOffset;
+			break;
+		}
+
+	}
+	//int id = size - (event->y()+sceneRect().y())/keyHeight + keyOffset-1;
 	LGraphicsView::mouseMoveEvent(event);
-	if(id >= 0 && id != lastId)
+	if(id != lastHoverId && found == true)
 	{
 		emit mouseHoverChanged(id);
-		lastId = id;
+		lastHoverId = id;
 	}
+}
+
+void LPianoPlain::leaveEvent(QEvent *event)
+{
+	lastHoverId = -1;
+	emit mouseHoverChanged(-1);
+	LGraphicsView::leaveEvent(event);
+}
+
+void LPianoPlain::setInternalLength(int length)
+{
+	internalLength = length;
+	resizeEvent(NULL);
+}
+
+LPianoNote* LPianoPlain::addNote(int id, int location, int length)
+{
+	int size = pianoStrips.size();
+	int index = id-keyOffset;
+	int yCoord = (size-index-1)*keyHeight;
+	LPianoNote* note = new LPianoNote;
+	scene->addWidget(note);
+	note->setGeometry(location,yCoord,length,keyHeight);
+	notes.push_back(note);
+	return note;
 }
 
 void LPianoPlain::buildKey(int id, bool &isBlackKey, QColor& backgroundColor, QColor& bottomLineColor)
@@ -94,6 +140,7 @@ void LPianoPlain::buildKey(int id, bool &isBlackKey, QColor& backgroundColor, QC
 		bottomLineColor = QColor::fromHsv(0,0,196);
 }
 
+//TODO : check is setGeometry here is correct
 void LPianoPlain::pushKey()
 {
 	int size = pianoStrips.size();;\
@@ -108,8 +155,8 @@ void LPianoPlain::pushKey()
 	pianoStrip->setBackgroundColor(backgroundColor);
 	pianoStrip->setbottomLineColor(bottomLineColor);
 
-	pianoStrip->setZValue(-1);
-	pianoStrip->setGeometry(0,height()-(size+1)*keyHeight,width(),keyHeight);
+	pianoStrip->setZValue(-2);
+	pianoStrip->setGeometry(0,height()-(size+1)*keyHeight,internalLength,keyHeight);
 	pianoStrips.push_back(pianoStrip);
 }
 

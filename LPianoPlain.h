@@ -5,6 +5,7 @@
 #include <QVector>
 
 class LGraphicsPianoStripItem;
+class LPianoNote;
 
 class LPianoPlain : public LGraphicsView
 {
@@ -16,6 +17,10 @@ public:
 	void setKeyNum(int num);
 	void setKeyOffset(int offset);
 	void mouseMoveEvent(QMouseEvent* event);
+	void leaveEvent(QEvent* event);
+	void setInternalLength(int length);
+
+	LPianoNote* addNote(int id, int location, int length);
 
 signals:
 	void mouseHoverChanged(int id);
@@ -25,11 +30,14 @@ public slots:
 protected:
 	int keyHeight;
 	int keyOffset;
+	int internalLength;
+	int lastHoverId;
 
 	QGraphicsScene* scene;
 	QVector<LGraphicsPianoStripItem*> pianoStrips;
+	QVector<LPianoNote*> notes;
 
-	void buildKey(int id, bool& isBlackKey, QColor &backgroundColor, QColor &bottomLineColor);\
+	void buildKey(int id, bool& isBlackKey, QColor &backgroundColor, QColor &bottomLineColor);
 
 	void pushKey();
 	void popKey();
