@@ -5,6 +5,7 @@
 class LPianoKeyBoard;
 class LPianoPlain;
 class QScrollBar;
+class QSlider;
 class LPianoRoll : public QWidget
 {
 	Q_OBJECT
@@ -19,12 +20,14 @@ public slots:
 	void onVerticalScrollbarValueChanged(int val);
 	void onHorizontalScrollbarValueChanged(int val);
 	void onPianoPlainHoverChanged(int id);
+	void onZoomSliderValueChanged(int val);
 
 protected:
 	LPianoKeyBoard* keyboard;
 	LPianoPlain* plain;
 	QScrollBar* verticalScrollBar;
 	QScrollBar* horizontalScrollBar;
+	QSlider* zoomSloder;
 
 	bool ctrlPressed;
 

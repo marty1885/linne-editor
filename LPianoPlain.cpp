@@ -3,9 +3,14 @@
 #include <LinneEditor.h>
 #include <LGraphicsPianoStripItem.h>
 #include <LPianoNote.h>
+#include <QScrollBar>
+#include <QGuiApplication>
 
 #include <QMouseEvent>
 #include <QDebug>
+#include <QMouseEvent>
+
+static int barLength = 960;
 
 LPianoPlain::LPianoPlain(QWidget *parent) :
 	LGraphicsView(parent)
@@ -19,12 +24,22 @@ LPianoPlain::LPianoPlain(QWidget *parent) :
 	setStyleSheet("QGraphicsView { border-style: none; }");
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	setSceneRect(frameGeometry());
+	setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
 	scene = new QGraphicsScene(this);
 	setScene(scene);
 
 	for(int i=0;i<12;i++)
 		pushKey();
+
+	int size = pianoStrips.size();
+	for(int i = 1; i*barLength < internalLength ;i++)
+	{
+		QGraphicsLineItem* line = scene->addLine(i*barLength, 1, i*barLength, height()-1);
+		//line->setPen(QPen(QColor::fromHsv(51,48,199),1,Qt::SolidLine));
+		measureBars.push_back(line);
+	}
 }
 
 void LPianoPlain::resizeEvent(QResizeEvent *event)
@@ -32,7 +47,10 @@ void LPianoPlain::resizeEvent(QResizeEvent *event)
 	int size = pianoStrips.size();
 	for(int i=0;i<size;i++)
 		pianoStrips[i]->setGeometry(0,(size-i-1)*keyHeight,internalLength,keyHeight);
-	translate(0,0);
+	int barSize = measureBars.size();
+	for(int i=1;i<=barSize;i++)
+		measureBars[i-1]->setLine(i*barLength, 1, i*barLength, size*keyHeight);
+	setSceneRect(QRectF(0,0,sceneRect().x(),sceneRect().y()));
 }
 
 void LPianoPlain::setKeyNum(int num)
@@ -70,39 +88,38 @@ void LPianoPlain::setKeyOffset(int offset)
 void LPianoPlain::mouseMoveEvent(QMouseEvent *event)
 {
 	int size = pianoStrips.size();
-	int id = 0;
-	bool found = false;
-	qDebug() << translateVec;
-	for(int i=0;i<size;i++)
-	{
-		LGraphicsPianoStripItem* item = pianoStrips[i];
-		QRectF rect = item->sceneBoundingRect();
-		QVector2D posVec(event->x()+translateVec.x(),event->y()+translateVec.y());
-		QPoint point = mapFromGlobal(QPoint(posVec.x(),posVec.y()));
-		QRectF pos(point.x(),point.y(),point.x(),point.y());
-		qDebug() << point;
-		if(rect.intersects(pos))//TODO: This ignores any transformation
-		{
-			found = true;
-			id = i+keyOffset;
-			break;
-		}
+	int pos = event->y()+sceneRect().y();
+	int id = size - pos/keyHeight + keyOffset-1 + (pos%keyHeight == 0 ? 1 : 0);
+	id = (id>size-1 ? size-1 : id);
 
-	}
-	//int id = size - (event->y()+sceneRect().y())/keyHeight + keyOffset-1;
-	LGraphicsView::mouseMoveEvent(event);
-	if(id != lastHoverId && found == true)
+	QGraphicsView::mouseMoveEvent(event);
+	if(id != lastHoverId)
 	{
 		emit mouseHoverChanged(id);
 		lastHoverId = id;
 	}
 }
 
+void LPianoPlain::mousePressEvent(QMouseEvent *event)
+{
+	int size = pianoStrips.size();
+	int pos = event->y();
+	int id = size - pos/keyHeight + keyOffset-1 + (pos%keyHeight == 0 ? 1 : 0);
+	id = (id>size-1 ? size-1 : id);
+
+	addNote(id,event->x() + horizontalScrollBar()->value() + sceneRect().y(), 83);
+}
+
+void LPianoPlain::wheelEvent(QWheelEvent *event)
+{
+	//if(QGuiApplication::queryKeyboardModifiers().testFlag(Qt::ControlModifier)
+}
+
 void LPianoPlain::leaveEvent(QEvent *event)
 {
 	lastHoverId = -1;
 	emit mouseHoverChanged(-1);
-	LGraphicsView::leaveEvent(event);
+	QGraphicsView::leaveEvent(event);
 }
 
 void LPianoPlain::setInternalLength(int length)

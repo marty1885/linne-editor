@@ -3,6 +3,7 @@
 
 #include <LGraphicsView.h>
 #include <QVector>
+#include <QGraphicsLineItem>
 
 class LGraphicsPianoStripItem;
 class LPianoNote;
@@ -17,6 +18,8 @@ public:
 	void setKeyNum(int num);
 	void setKeyOffset(int offset);
 	void mouseMoveEvent(QMouseEvent* event);
+	void mousePressEvent(QMouseEvent* event);
+	void wheelEvent(QWheelEvent* event);
 	void leaveEvent(QEvent* event);
 	void setInternalLength(int length);
 
@@ -36,6 +39,8 @@ protected:
 	QGraphicsScene* scene;
 	QVector<LGraphicsPianoStripItem*> pianoStrips;
 	QVector<LPianoNote*> notes;
+	QVector<QGraphicsLineItem*> measureBars;
+
 
 	void buildKey(int id, bool& isBlackKey, QColor &backgroundColor, QColor &bottomLineColor);
 

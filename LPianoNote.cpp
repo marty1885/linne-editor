@@ -18,7 +18,7 @@ void LPianoNote::paintEvent(QPaintEvent *event)
 	painter.drawLines(lines,4);
 
 	QFont font = painter.font();
-	int fontSize = height()*(10.0f/13);
+	int fontSize = height()*(11.0f/13);
 	font.setPixelSize(fontSize);
 	painter.setFont(font);
 	painter.setPen(Qt::black);

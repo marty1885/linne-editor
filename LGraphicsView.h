@@ -11,7 +11,6 @@ public:
 	explicit LGraphicsView(QWidget *parent = 0);
 
 	void translate(qreal dx, qreal dy);
-	void translateTo(qreal x, qreal y);
 
 signals:
 
@@ -19,7 +18,6 @@ public slots:
 
 
 protected:
-	QVector2D translateVec;
 
 };
 

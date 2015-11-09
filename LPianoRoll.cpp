@@ -1,5 +1,7 @@
 #include "LPianoRoll.h"
 
+#include <math.h>
+
 #include <LPianoKeyBoard.h>
 #include <LPianoPlain.h>
 #include <QScrollBar>
@@ -8,6 +10,7 @@
 #include <QDebug>
 #include <QWheelEvent>
 #include <QGuiApplication>
+#include <QSlider>
 
 LPianoRoll::LPianoRoll(QWidget *parent) :
 	QWidget(parent)
@@ -19,8 +22,6 @@ LPianoRoll::LPianoRoll(QWidget *parent) :
 
 	plain = new LPianoPlain(this);
 	plain->setKeyNum(72);
-	plain->addNote(0,0,83);
-	//plain->scale(1,2);
 
 	verticalScrollBar = new QScrollBar(this);
 	verticalScrollBar->setGeometry(width()-12,0,12,height());
@@ -29,9 +30,15 @@ LPianoRoll::LPianoRoll(QWidget *parent) :
 	horizontalScrollBar = new QScrollBar(Qt::Horizontal,this);
 	horizontalScrollBar->setGeometry(0,height()-12,width()-12,12);
 
+	zoomSloder = new QSlider(Qt::Horizontal,this);
+	zoomSloder->setGeometry(width()-83,height()-12,width()-83,12);
+	zoomSloder->setMinimum(1);
+	zoomSloder->setValue(zoomSloder->maximum());
+
 	QObject::connect(verticalScrollBar,SIGNAL(valueChanged(int)),SLOT(onVerticalScrollbarValueChanged(int)));
 	QObject::connect(horizontalScrollBar,SIGNAL(valueChanged(int)),SLOT(onHorizontalScrollbarValueChanged(int)));
 	QObject::connect(plain,SIGNAL(mouseHoverChanged(int)),SLOT(onPianoPlainHoverChanged(int)));
+	QObject::connect(zoomSloder,SIGNAL(valueChanged(int)),SLOT(onZoomSliderValueChanged(int)));
 }
 
 void LPianoRoll::resizeEvent(QResizeEvent *event)
@@ -39,7 +46,8 @@ void LPianoRoll::resizeEvent(QResizeEvent *event)
 	keyboard->setGeometry(0,0,83,height()-12);
 	plain->setGeometry(84,0,width()-84-12,height()-12);
 	verticalScrollBar->setGeometry(width()-12,0,12,height()-12);
-	horizontalScrollBar->setGeometry(83,height()-12,width()-12-83,12);
+	horizontalScrollBar->setGeometry(83,height()-12,width()-12-83-93,12);
+	zoomSloder->setGeometry(width()-96,height()-12,96-12,12);
 
 	verticalScrollBar->setMaximum(keyboard->keyNum()*keyboard->getKeyHeight()-height()+12);
 	const int oveLength = 3000;
@@ -49,35 +57,31 @@ void LPianoRoll::resizeEvent(QResizeEvent *event)
 
 void LPianoRoll::wheelEvent(QWheelEvent *event)
 {
-	if(QGuiApplication::queryKeyboardModifiers().testFlag(Qt::ControlModifier))
-	{
-		int currentVal = verticalScrollBar->value();
-		int step = verticalScrollBar->singleStep();
-		verticalScrollBar->setValue(currentVal+(-event->delta()/120.0f)*4.3*step);
-	}
-	else
-	{
-		int currentVal = horizontalScrollBar->value();
-		int step = horizontalScrollBar->singleStep();
-		horizontalScrollBar->setValue(currentVal+(-event->delta()/120.0f)*step);
-	}
-	QWidget::wheelEvent(event);
+//	if(QGuiApplication::queryKeyboardModifiers().testFlag(Qt::ControlModifier))
+//	{
+//		int currentVal = verticalScrollBar->value();
+//		int step = verticalScrollBar->singleStep();
+//		verticalScrollBar->setValue(currentVal+(-event->delta()/120.0f)*4.3*step);
+//	}
+//	else
+//	{
+//		int currentVal = horizontalScrollBar->value();
+//		int step = horizontalScrollBar->singleStep();
+//		horizontalScrollBar->setValue(currentVal+(-event->delta()/120.0f)*step);
+//	}
+	//QWidget::wheelEvent(event);
 }
 
 void LPianoRoll::onVerticalScrollbarValueChanged(int val)
 {
 	//qDebug() << val;
-	static int lastVal = 0.0f;
-	keyboard->translate(0,val-lastVal);
-	plain->translate(0,val-lastVal);
-	lastVal = val;
+	keyboard->translate(horizontalScrollBar->value(),val);
+	plain->translate(horizontalScrollBar->value(),val);
 }
 
 void LPianoRoll::onHorizontalScrollbarValueChanged(int val)
 {
-	static int lastVal = 0.0f;
-	plain->translate(val-lastVal,0);
-	lastVal = val;
+	plain->translate(val,verticalScrollBar->value());
 }
 
 void LPianoRoll::onPianoPlainHoverChanged(int id)
@@ -94,4 +98,14 @@ void LPianoRoll::onPianoPlainHoverChanged(int id)
 		keyboard->keys()[lastKey]->setHighLight(false);
 		lastKey = 0;
 	}
+}
+
+void LPianoRoll::onZoomSliderValueChanged(int val)
+{
+	static float lastScale = 1.0f;
+	float scaling = sqrt((float)val/zoomSloder->maximum());
+	plain->scale(1/lastScale,1);
+	plain->scale(scaling,1);
+	lastScale = scaling;
+
 }

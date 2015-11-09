@@ -19,18 +19,15 @@ class MainWindow : public QMainWindow
 
 public:
 	explicit MainWindow(QWidget *parent = 0);
+	void resizeEvent(QResizeEvent* event);
 	~MainWindow();
 
 public slots:
-	void onPianoPlainHoverChanged(int id);
+
 private:
 	Ui::MainWindow *ui;
 
 protected:
-	LPianoKey* pianoKey;
-	LPianoKeyBoard* keyBoard;
-	LPianoNote* note;
-	LPianoPlain* pianoPlain;
 	LPianoRoll* pianoRoll;
 
 };
