@@ -1,6 +1,7 @@
 #include "LPianoPlain.h"
 #include <LGraphicsPianoStripItem.h>
 #include <QGraphicsProxyWidget>
+#include <QScrollBar>
 
 #include <QDebug>
 
@@ -11,8 +12,8 @@ LPianoPlain::LPianoPlain(QWidget *parent) :
 	keyHeight = 14;
 
 	setStyleSheet("QGraphicsView { border-style: none; }");
-	//setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	//setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	scene = new QGraphicsScene(this);
 	setScene(scene);
@@ -26,10 +27,11 @@ void LPianoPlain::resizeEvent(QResizeEvent *event)
 {
 	int size = pianoStrips.size();
 	for(int i=0;i<size;i++)
-		pianoStrips[i]->setGeometry(QRect(0,(size-i-1)*keyHeight,width()*8,keyHeight));
-
+		pianoStrips[i]->setGeometry(QRect(0,(size-i-1)*keyHeight,width(),keyHeight));
 	setSceneRect(scene->itemsBoundingRect());
+
 	QGraphicsView::resizeEvent(event);
+	//qDebug() << verticalScrollBar()->maximum();
 }
 
 void LPianoPlain::leaveEvent(QEvent *event)

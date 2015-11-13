@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	setWindowIcon(windowIcon);
 
 	pianoRoll = new LPianoRoll(this);
-	pianoRoll->setGeometry(200,330,800,280);
+	pianoRoll->setGeometry(10,10,width()-10,height()-10);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)

@@ -15,7 +15,6 @@
 LPianoRoll::LPianoRoll(QWidget *parent) :
 	QWidget(parent)
 {
-	ctrlPressed = false;
 
 	keyboard = new LPianoKeyBoard(this);
 	keyboard->setKeyNum(72);
@@ -39,8 +38,9 @@ LPianoRoll::LPianoRoll(QWidget *parent) :
 	QObject::connect(horizontalScrollBar,SIGNAL(valueChanged(int)),SLOT(onHorizontalScrollbarValueChanged(int)));
 	QObject::connect(plain,SIGNAL(mouseHoverChanged(int)),SLOT(onPianoPlainHoverChanged(int)));
 	QObject::connect(zoomSloder,SIGNAL(valueChanged(int)),SLOT(onZoomSliderValueChanged(int)));
-
-	adjustScrollBars();
+	QObject::connect(plain->verticalScrollBar(),SIGNAL(valueChanged(int)),SLOT(onPlainVerticalScrollbarValueChanged(int)));
+	QObject::connect(plain->horizontalScrollBar(),SIGNAL(valueChanged(int)),SLOT(onPlainHorizontalScrollbarValueChanged(int)));
+	QObject::connect(keyboard->verticalScrollBar(),SIGNAL(valueChanged(int)),SLOT(onPlainVerticalScrollbarValueChanged(int)));
 }
 
 
@@ -53,7 +53,14 @@ void LPianoRoll::resizeEvent(QResizeEvent *event)
 	horizontalScrollBar->setGeometry(83,height()-12,width()-12-83-93,12);
 	zoomSloder->setGeometry(width()-96,height()-12,96-12,12);
 
-	//Adjust scrollbar attributes
+	//TODO: Add initlization code
+	static bool firstRun = true;
+	if(firstRun == true)
+	{
+		plain->resizeEvent(NULL);
+		keyboard->resizeEvent(NULL);
+		firstRun = false;
+	}
 	adjustScrollBars();
 }
 
@@ -71,19 +78,17 @@ void LPianoRoll::wheelEvent(QWheelEvent *event)
 //		int step = horizontalScrollBar->singleStep();
 //		horizontalScrollBar->setValue(currentVal+(-event->delta()/120.0f)*step);
 //	}
-	//QWidget::wheelEvent(event);
 }
 
 void LPianoRoll::onVerticalScrollbarValueChanged(int val)
 {
-	//qDebug() << val;
-//	keyboard->translate(horizontalScrollBar->value(),val);
-//	plain->translate(horizontalScrollBar->value(),val);
+	plain->verticalScrollBar()->setValue(val);
+	keyboard->verticalScrollBar()->setValue(val);
 }
 
 void LPianoRoll::onHorizontalScrollbarValueChanged(int val)
 {
-//	plain->translate(val,verticalScrollBar->value());
+	plain->verticalScrollBar()->setValue(val);
 }
 
 void LPianoRoll::onPianoPlainHoverChanged(int id)
@@ -112,15 +117,39 @@ void LPianoRoll::onZoomSliderValueChanged(int val)
 
 }
 
+void LPianoRoll::onPlainVerticalScrollbarValueChanged(int val)
+{
+	verticalScrollBar->setValue(val);
+	plain->verticalScrollBar()->setValue(val);
+	keyboard->verticalScrollBar()->setValue(val);
+}
+
+void LPianoRoll::onPlainHorizontalScrollbarValueChanged(int val)
+{
+	horizontalScrollBar->setValue(val);
+}
+
 void LPianoRoll::adjustScrollBars()
 {
-	verticalScrollBar->setMaximum(keyboard->verticalScrollBar()->maximum());
-	verticalScrollBar->setMinimum(keyboard->verticalScrollBar()->minimum());
-	verticalScrollBar->setValue(keyboard->verticalScrollBar()->value());
-	verticalScrollBar->setPageStep(keyboard->verticalScrollBar()->pageStep());
+	verticalScrollBar->setMaximum(plain->verticalScrollBar()->maximum());
+	verticalScrollBar->setMinimum(plain->verticalScrollBar()->minimum());
+	verticalScrollBar->setValue(plain->verticalScrollBar()->value());
+	verticalScrollBar->setPageStep(plain->verticalScrollBar()->pageStep());
 
 	horizontalScrollBar->setMaximum(plain->horizontalScrollBar()->maximum());
 	horizontalScrollBar->setMinimum(plain->horizontalScrollBar()->minimum());
 	horizontalScrollBar->setValue(plain->horizontalScrollBar()->value());
 	horizontalScrollBar->setPageStep(plain->horizontalScrollBar()->pageStep());
+
+	//Disable it if useless
+	if(verticalScrollBar->maximum() == verticalScrollBar->minimum())
+		verticalScrollBar->setEnabled(false);
+	else
+		verticalScrollBar->setEnabled(true);
+
+	if(horizontalScrollBar->maximum() == horizontalScrollBar->minimum())
+		horizontalScrollBar->setEnabled(false);
+	else
+		horizontalScrollBar->setEnabled(true);
 }
+

@@ -21,6 +21,8 @@ public slots:
 	void onHorizontalScrollbarValueChanged(int val);
 	void onPianoPlainHoverChanged(int id);
 	void onZoomSliderValueChanged(int val);
+	void onPlainVerticalScrollbarValueChanged(int val);
+	void onPlainHorizontalScrollbarValueChanged(int val);
 
 protected:
 	LPianoKeyBoard* keyboard;
@@ -28,8 +30,6 @@ protected:
 	QScrollBar* verticalScrollBar;
 	QScrollBar* horizontalScrollBar;
 	QSlider* zoomSloder;
-
-	bool ctrlPressed;
 
 	void adjustScrollBars();
 
