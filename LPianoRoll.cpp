@@ -37,7 +37,7 @@ LPianoRoll::LPianoRoll(QWidget *parent) :
 
 	QObject::connect(verticalScrollBar,SIGNAL(valueChanged(int)),SLOT(onVerticalScrollbarValueChanged(int)));
 	QObject::connect(horizontalScrollBar,SIGNAL(valueChanged(int)),SLOT(onHorizontalScrollbarValueChanged(int)));
-	QObject::connect(plain,SIGNAL(mouseHoverChanged(int)),SLOT(onPianoPlainHoverChanged(int)));
+	//QObject::connect(plain,SIGNAL(mouseHoverChanged(int)),SLOT(onPianoPlainHoverChanged(int)));
 	QObject::connect(zoomSloder,SIGNAL(valueChanged(int)),SLOT(onZoomSliderValueChanged(int)));
 }
 

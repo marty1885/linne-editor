@@ -1,8 +1,11 @@
 #include "LGraphicsPianoStripItem.h"
 #include <QPainter>
+
+#include <QDebug>
 LGraphicsPianoStripItem::LGraphicsPianoStripItem(QGraphicsItem *parent) :
 	QGraphicsObject(parent)
 {
+	setAcceptHoverEvents(true);
 	paintBrush = Qt::black;
 	isBlackKey = false;
 
@@ -45,6 +48,11 @@ void LGraphicsPianoStripItem::setGeometry(int x, int y, int w, int h)
 	itemRect = QRect(x,y,w,h);
 }
 
+void LGraphicsPianoStripItem::setGeometry(QRect rect)
+{
+	setGeometry(rect.x(),rect.y(),rect.width(), rect.height());
+}
+
 void LGraphicsPianoStripItem::setBlackKey(bool blackKey)
 {
 	isBlackKey = blackKey;
@@ -59,4 +67,9 @@ void LGraphicsPianoStripItem::setBackgroundColor(QColor color)
 void LGraphicsPianoStripItem::setbottomLineColor(QColor color)
 {
 	bottomLineColor = color;
+}
+
+void LGraphicsPianoStripItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+	emit mouseEntered();
 }

@@ -1,12 +1,13 @@
 #ifndef LPIANOPLAIN_H
 #define LPIANOPLAIN_H
 
-#include <QVector>
-#include <QGraphicsLineItem>
 #include <QGraphicsView>
+#include <QVector>
 
+#include <LinneEditor.h>
+
+class LPianoKey;
 class LGraphicsPianoStripItem;
-class LPianoNote;
 
 class LPianoPlain : public QGraphicsView
 {
@@ -17,36 +18,25 @@ public:
 	void resizeEvent(QResizeEvent *event);
 	void setKeyNum(int num);
 	void setKeyOffset(int offset);
-	void mouseMoveEvent(QMouseEvent* event);
-	void mousePressEvent(QMouseEvent* event);
-	void wheelEvent(QWheelEvent* event);
-	void leaveEvent(QEvent* event);
-	void setInternalLength(int length);
+	void setKeyHeight(int height);
 
-	LPianoNote* addNote(int id, int location, int length);
+	int keyNum();
+	int getKeyHeight();
 
 signals:
-	void mouseHoverChanged(int id);
 
 public slots:
 
 protected:
-	int keyHeight;
-	int keyOffset;
-	int internalLength;
-	int lastHoverId;
-
-	QGraphicsScene* scene;
 	QVector<LGraphicsPianoStripItem*> pianoStrips;
-	QVector<LPianoNote*> notes;
-	QVector<QGraphicsLineItem*> measureBars;
+	QGraphicsScene* scene;
 
+	int keyOffset;
+	int keyHeight;
 
-	void buildKey(int id, bool& isBlackKey, QColor &backgroundColor, QColor &bottomLineColor);
-
+	void buildKey(int id, bool &isBlackKey, QColor& backgroundColor, QColor& bottomLineColor);
 	void pushKey();
 	void popKey();
-
 };
 
 #endif // LPIANOPLAIN_H

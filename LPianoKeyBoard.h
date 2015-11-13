@@ -3,7 +3,6 @@
 
 #include <QGraphicsView>
 #include <QVector>
-#include <QGraphicsView>
 
 #include <LinneEditor.h>
 

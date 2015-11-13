@@ -27,6 +27,7 @@ void LPianoKeyBoard::resizeEvent(QResizeEvent *event)
 	int size = pianoKeys.size();
 	for(int i=0;i<size;i++)
 		pianoKeys[i]->setGeometry(QRect(0,(size-i-1)*keyHeight,width(),keyHeight));
+	setSceneRect(scene->itemsBoundingRect());
 	QGraphicsView::resizeEvent(event);
 }
 
