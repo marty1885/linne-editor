@@ -31,6 +31,8 @@ protected:
 
 	bool ctrlPressed;
 
+	void adjustScrollBars();
+
 };
 
 #endif // LPIANOROLL_H

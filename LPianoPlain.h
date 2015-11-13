@@ -16,6 +16,8 @@ public:
 	explicit LPianoPlain(QWidget *parent = 0);
 
 	void resizeEvent(QResizeEvent *event);
+	void leaveEvent(QEvent* event);
+
 	void setKeyNum(int num);
 	void setKeyOffset(int offset);
 	void setKeyHeight(int height);
@@ -24,8 +26,10 @@ public:
 	int getKeyHeight();
 
 signals:
+	void mouseHoverChanged(int index);
 
 public slots:
+	void onPianoStripMouseHover();
 
 protected:
 	QVector<LGraphicsPianoStripItem*> pianoStrips;

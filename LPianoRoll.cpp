@@ -37,22 +37,24 @@ LPianoRoll::LPianoRoll(QWidget *parent) :
 
 	QObject::connect(verticalScrollBar,SIGNAL(valueChanged(int)),SLOT(onVerticalScrollbarValueChanged(int)));
 	QObject::connect(horizontalScrollBar,SIGNAL(valueChanged(int)),SLOT(onHorizontalScrollbarValueChanged(int)));
-	//QObject::connect(plain,SIGNAL(mouseHoverChanged(int)),SLOT(onPianoPlainHoverChanged(int)));
+	QObject::connect(plain,SIGNAL(mouseHoverChanged(int)),SLOT(onPianoPlainHoverChanged(int)));
 	QObject::connect(zoomSloder,SIGNAL(valueChanged(int)),SLOT(onZoomSliderValueChanged(int)));
+
+	adjustScrollBars();
 }
+
 
 void LPianoRoll::resizeEvent(QResizeEvent *event)
 {
+	//Adjust widgets
 	keyboard->setGeometry(0,0,83,height()-12);
 	plain->setGeometry(84,0,width()-84-12,height()-12);
 	verticalScrollBar->setGeometry(width()-12,0,12,height()-12);
 	horizontalScrollBar->setGeometry(83,height()-12,width()-12-83-93,12);
 	zoomSloder->setGeometry(width()-96,height()-12,96-12,12);
 
-	verticalScrollBar->setMaximum(keyboard->keyNum()*keyboard->getKeyHeight()-height()+12);
-	const int oveLength = 3000;
-	horizontalScrollBar->setMaximum(oveLength-plain->geometry().width());
-	//plain->setInternalLength(oveLength);
+	//Adjust scrollbar attributes
+	adjustScrollBars();
 }
 
 void LPianoRoll::wheelEvent(QWheelEvent *event)
@@ -87,7 +89,7 @@ void LPianoRoll::onHorizontalScrollbarValueChanged(int val)
 void LPianoRoll::onPianoPlainHoverChanged(int id)
 {
 	static int lastKey = 0;
-	if(id > 0)
+	if(id >= 0)
 	{
 		keyboard->keys()[lastKey]->setHighLight(false);
 		keyboard->keys()[id]->setHighLight(true);
@@ -108,4 +110,17 @@ void LPianoRoll::onZoomSliderValueChanged(int val)
 	plain->scale(scaling,1);
 	lastScale = scaling;
 
+}
+
+void LPianoRoll::adjustScrollBars()
+{
+	verticalScrollBar->setMaximum(keyboard->verticalScrollBar()->maximum());
+	verticalScrollBar->setMinimum(keyboard->verticalScrollBar()->minimum());
+	verticalScrollBar->setValue(keyboard->verticalScrollBar()->value());
+	verticalScrollBar->setPageStep(keyboard->verticalScrollBar()->pageStep());
+
+	horizontalScrollBar->setMaximum(plain->horizontalScrollBar()->maximum());
+	horizontalScrollBar->setMinimum(plain->horizontalScrollBar()->minimum());
+	horizontalScrollBar->setValue(plain->horizontalScrollBar()->value());
+	horizontalScrollBar->setPageStep(plain->horizontalScrollBar()->pageStep());
 }

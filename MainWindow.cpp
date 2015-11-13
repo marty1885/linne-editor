@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
 	pianoRoll->setGeometry(10,10,width()-10,height()-10);
-	//MainWindow::resizeEvent(event);
 }
 
 MainWindow::~MainWindow()

@@ -26,10 +26,16 @@ void LPianoPlain::resizeEvent(QResizeEvent *event)
 {
 	int size = pianoStrips.size();
 	for(int i=0;i<size;i++)
-		pianoStrips[i]->setGeometry(QRect(0,(size-i-1)*keyHeight,width(),keyHeight));
+		pianoStrips[i]->setGeometry(QRect(0,(size-i-1)*keyHeight,width()*8,keyHeight));
 
 	setSceneRect(scene->itemsBoundingRect());
 	QGraphicsView::resizeEvent(event);
+}
+
+void LPianoPlain::leaveEvent(QEvent *event)
+{
+	emit mouseHoverChanged(-1);
+	QGraphicsView::leaveEvent(event);
 }
 
 void LPianoPlain::setKeyNum(int num)
@@ -79,6 +85,14 @@ int LPianoPlain::getKeyHeight()
 	return keyHeight;
 }
 
+void LPianoPlain::onPianoStripMouseHover()
+{
+	QObject* senderPtr = QObject::sender();
+	LGraphicsPianoStripItem* sender = (LGraphicsPianoStripItem*)senderPtr;
+	int index = pianoStrips.indexOf(sender);
+	emit mouseHoverChanged(index);
+}
+
 void LPianoPlain::buildKey(int id, bool &isBlackKey, QColor& backgroundColor, QColor& bottomLineColor)
 {
 	int dataIndex = id%12 + (id >= 0 ? 0 : 12);
@@ -113,6 +127,7 @@ void LPianoPlain::pushKey()
 
 	scene->addItem(pianoStrip);
 	pianoStrip->setGeometry(QRect(0,(index+1)*keyHeight,width(),keyHeight));
+	QObject::connect(pianoStrip,SIGNAL(mouseEntered()),SLOT(onPianoStripMouseHover()));
 
 	pianoStrips.push_back(pianoStrip);
 }
