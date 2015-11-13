@@ -3,14 +3,13 @@
 
 #include <QGraphicsView>
 #include <QVector>
-#include <QPair>
+#include <QGraphicsView>
 
 #include <LinneEditor.h>
-#include <LGraphicsView.h>
 
 class LPianoKey;
 
-class LPianoKeyBoard : public LGraphicsView
+class LPianoKeyBoard : public QGraphicsView
 {
 	Q_OBJECT
 public:

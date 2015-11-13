@@ -5,7 +5,7 @@
 #include <QDebug>
 
 LPianoKeyBoard::LPianoKeyBoard(QWidget *parent) :
-	LGraphicsView(parent)
+	QGraphicsView(parent)
 {
 	keyOffset = 0;
 	keyHeight = 14;
@@ -27,7 +27,7 @@ void LPianoKeyBoard::resizeEvent(QResizeEvent *event)
 	int size = pianoKeys.size();
 	for(int i=0;i<size;i++)
 		pianoKeys[i]->setGeometry(QRect(0,(size-i-1)*keyHeight,width(),keyHeight));
-	translate(0,0);
+	QGraphicsView::resizeEvent(event);
 }
 
 void LPianoKeyBoard::setKeyNum(int num)
