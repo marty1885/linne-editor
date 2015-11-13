@@ -1,9 +1,7 @@
 #include "LGraphicsPianoStripItem.h"
 #include <QPainter>
-#include <QVector>
-#include <QPolygonF>
-
-LGraphicsPianoStripItem::LGraphicsPianoStripItem() : QGraphicsItem()
+LGraphicsPianoStripItem::LGraphicsPianoStripItem(QGraphicsItem *parent) :
+	QGraphicsObject(parent)
 {
 	paintBrush = Qt::black;
 	isBlackKey = false;

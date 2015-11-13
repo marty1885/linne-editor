@@ -1,14 +1,14 @@
 #ifndef LGRAPHICSPIANOSTRIPITEM_H
 #define LGRAPHICSPIANOSTRIPITEM_H
 
-#include <QGraphicsItem>
-#include <QGraphicsRectItem>
+#include <QGraphicsObject>
 #include <QBrush>
 
-class LGraphicsPianoStripItem : public QGraphicsItem
+class LGraphicsPianoStripItem : public QGraphicsObject
 {
+	Q_OBJECT
 public:
-	LGraphicsPianoStripItem();
+	explicit LGraphicsPianoStripItem(QGraphicsItem *parent = 0);
 	void paint( QPainter *painter,
 		      const QStyleOptionGraphicsItem *option,
 		      QWidget *widget );
@@ -18,6 +18,10 @@ public:
 	void setBackgroundColor(QColor color);
 	void setbottomLineColor(QColor color);
 
+signals:
+
+public slots:
+
 protected:
 	QPainterPath itemGeometry;
 	QRect itemRect;
@@ -26,6 +30,7 @@ protected:
 
 	QColor backgroundColor;
 	QColor bottomLineColor;
+
 };
 
 #endif // LGRAPHICSPIANOSTRIPITEM_H
