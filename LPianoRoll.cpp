@@ -93,11 +93,11 @@ void LPianoRoll::onPianoPlainHoverChanged(int index)
 
 void LPianoRoll::onZoomSliderValueChanged(int val)
 {
-	static float lastScale = 1.0f;
-	float scaling = sqrt((float)val/zoomSloder->maximum());
-	plain->scale(1/lastScale,1);
-	plain->scale(scaling,1);
-	lastScale = scaling;
+//	static float lastScale = 1.0f;
+//	float scaling = sqrt((float)val/zoomSloder->maximum());
+//	plain->scale(1/lastScale,1);
+//	plain->scale(scaling,1);
+//	lastScale = scaling;
 
 }
 
