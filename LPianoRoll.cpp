@@ -53,31 +53,15 @@ void LPianoRoll::resizeEvent(QResizeEvent *event)
 	horizontalScrollBar->setGeometry(83,height()-12,width()-12-83-93,12);
 	zoomSloder->setGeometry(width()-96,height()-12,96-12,12);
 
-	//TODO: Add initlization code
 	static bool firstRun = true;
 	if(firstRun == true)
 	{
+		//Force resizeEvent to make the scrollbars initlazed.
 		plain->resizeEvent(NULL);
 		keyboard->resizeEvent(NULL);
 		firstRun = false;
 	}
 	adjustScrollBars();
-}
-
-void LPianoRoll::wheelEvent(QWheelEvent *event)
-{
-//	if(QGuiApplication::queryKeyboardModifiers().testFlag(Qt::ControlModifier))
-//	{
-//		int currentVal = verticalScrollBar->value();
-//		int step = verticalScrollBar->singleStep();
-//		verticalScrollBar->setValue(currentVal+(-event->delta()/120.0f)*4.3*step);
-//	}
-//	else
-//	{
-//		int currentVal = horizontalScrollBar->value();
-//		int step = horizontalScrollBar->singleStep();
-//		horizontalScrollBar->setValue(currentVal+(-event->delta()/120.0f)*step);
-//	}
 }
 
 void LPianoRoll::onVerticalScrollbarValueChanged(int val)
@@ -91,14 +75,14 @@ void LPianoRoll::onHorizontalScrollbarValueChanged(int val)
 	plain->verticalScrollBar()->setValue(val);
 }
 
-void LPianoRoll::onPianoPlainHoverChanged(int id)
+void LPianoRoll::onPianoPlainHoverChanged(int index)
 {
 	static int lastKey = 0;
-	if(id >= 0)
+	if(index >= 0)
 	{
 		keyboard->keys()[lastKey]->setHighLight(false);
-		keyboard->keys()[id]->setHighLight(true);
-		lastKey = id;
+		keyboard->keys()[index]->setHighLight(true);
+		lastKey = index;
 	}
 	else
 	{
@@ -141,7 +125,7 @@ void LPianoRoll::adjustScrollBars()
 	horizontalScrollBar->setValue(plain->horizontalScrollBar()->value());
 	horizontalScrollBar->setPageStep(plain->horizontalScrollBar()->pageStep());
 
-	//Disable it if useless
+	//Disable scrollbar if useless
 	if(verticalScrollBar->maximum() == verticalScrollBar->minimum())
 		verticalScrollBar->setEnabled(false);
 	else

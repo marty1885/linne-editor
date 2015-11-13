@@ -1,7 +1,5 @@
 #include "LPianoPlain.h"
 #include <LGraphicsPianoStripItem.h>
-#include <QGraphicsProxyWidget>
-#include <QScrollBar>
 
 #include <QDebug>
 
@@ -85,6 +83,11 @@ int LPianoPlain::keyNum()
 int LPianoPlain::getKeyHeight()
 {
 	return keyHeight;
+}
+
+int LPianoPlain::getKeyOffset()
+{
+	return keyOffset;
 }
 
 void LPianoPlain::onPianoStripMouseHover()

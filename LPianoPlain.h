@@ -24,6 +24,7 @@ public:
 
 	int keyNum();
 	int getKeyHeight();
+	int getKeyOffset();
 
 signals:
 	void mouseHoverChanged(int index);

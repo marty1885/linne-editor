@@ -12,14 +12,13 @@ class LPianoRoll : public QWidget
 public:
 	explicit LPianoRoll(QWidget *parent = 0);
 	void resizeEvent(QResizeEvent* event);
-	void wheelEvent(QWheelEvent* event);
 
 signals:
 
 public slots:
 	void onVerticalScrollbarValueChanged(int val);
 	void onHorizontalScrollbarValueChanged(int val);
-	void onPianoPlainHoverChanged(int id);
+	void onPianoPlainHoverChanged(int index);
 	void onZoomSliderValueChanged(int val);
 	void onPlainVerticalScrollbarValueChanged(int val);
 	void onPlainHorizontalScrollbarValueChanged(int val);
