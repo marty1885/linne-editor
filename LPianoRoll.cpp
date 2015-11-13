@@ -52,7 +52,7 @@ void LPianoRoll::resizeEvent(QResizeEvent *event)
 	verticalScrollBar->setMaximum(keyboard->keyNum()*keyboard->getKeyHeight()-height()+12);
 	const int oveLength = 3000;
 	horizontalScrollBar->setMaximum(oveLength-plain->geometry().width());
-	plain->setInternalLength(oveLength);
+	//plain->setInternalLength(oveLength);
 }
 
 void LPianoRoll::wheelEvent(QWheelEvent *event)
@@ -75,13 +75,13 @@ void LPianoRoll::wheelEvent(QWheelEvent *event)
 void LPianoRoll::onVerticalScrollbarValueChanged(int val)
 {
 	//qDebug() << val;
-	keyboard->translate(horizontalScrollBar->value(),val);
-	plain->translate(horizontalScrollBar->value(),val);
+//	keyboard->translate(horizontalScrollBar->value(),val);
+//	plain->translate(horizontalScrollBar->value(),val);
 }
 
 void LPianoRoll::onHorizontalScrollbarValueChanged(int val)
 {
-	plain->translate(val,verticalScrollBar->value());
+//	plain->translate(val,verticalScrollBar->value());
 }
 
 void LPianoRoll::onPianoPlainHoverChanged(int id)

@@ -13,7 +13,7 @@
 static int barLength = 960;
 
 LPianoPlain::LPianoPlain(QWidget *parent) :
-	LGraphicsView(parent)
+	QGraphicsView(parent)
 {
 	keyHeight = 14;
 	keyOffset = 0;

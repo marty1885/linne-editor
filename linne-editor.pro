@@ -16,7 +16,6 @@ SOURCES += main.cpp\
         MainWindow.cpp \
     LPianoKey.cpp \
     LPianoKeyBoard.cpp \
-    LGraphicsView.cpp \
     LPianoNote.cpp \
     LPianoPlain.cpp \
     LGraphicsPianoStripItem.cpp \
@@ -26,7 +25,6 @@ HEADERS  += MainWindow.h \
     LPianoKey.h \
     LinneEditor.h \
     LPianoKeyBoard.h \
-    LGraphicsView.h \
     LPianoNote.h \
     LPianoPlain.h \
     LGraphicsPianoStripItem.h \

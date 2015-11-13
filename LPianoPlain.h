@@ -1,14 +1,14 @@
 #ifndef LPIANOPLAIN_H
 #define LPIANOPLAIN_H
 
-#include <LGraphicsView.h>
 #include <QVector>
 #include <QGraphicsLineItem>
+#include <QGraphicsView>
 
 class LGraphicsPianoStripItem;
 class LPianoNote;
 
-class LPianoPlain : public LGraphicsView
+class LPianoPlain : public QGraphicsView
 {
 	Q_OBJECT
 public:
