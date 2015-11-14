@@ -2,12 +2,17 @@
 #include <LGraphicsPianoStripItem.h>
 
 #include <QDebug>
+#include <QGraphicsLineItem>
+
+const static int beatLength = 960;
 
 LPianoPlain::LPianoPlain(QWidget *parent) :
 	QGraphicsView(parent)
 {
 	keyOffset = 0;
 	keyHeight = 14;
+	internalLength = 1200;
+	displayAmpitude = 1.0f;
 
 	setStyleSheet("QGraphicsView { border-style: none; }");
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -19,14 +24,25 @@ LPianoPlain::LPianoPlain(QWidget *parent) :
 	//12 keys on default
 	for(int i=0;i<12;i++)
 		pushKey();
+
+	for(int i=0;i*beatLength < internalLength;i++)
+		pushBarLine();
 }
 
 void LPianoPlain::resizeEvent(QResizeEvent *event)
 {
 	int size = pianoStrips.size();
 	for(int i=0;i<size;i++)
-		pianoStrips[i]->setGeometry(QRect(0,(size-i-1)*keyHeight,width(),keyHeight));
+		pianoStrips[i]->setGeometry(QRect(0,(size-i-1)*keyHeight,internalLength*displayAmpitude,keyHeight));
 	setSceneRect(scene->itemsBoundingRect());
+
+	int barSize = beatBars.size();
+	for(int i=0;i<barSize;i++)
+	{
+		float xCoord = i*beatLength*displayAmpitude;
+		beatBars[i]->setLine(xCoord,0,xCoord,keyNum()*keyHeight-1);
+	}
+
 
 	QGraphicsView::resizeEvent(event);
 	//qDebug() << verticalScrollBar()->maximum();
@@ -69,9 +85,34 @@ void LPianoPlain::setKeyOffset(int offset)
 	}
 }
 
+void LPianoPlain::setInternalLength(int length)
+{
+	if(internalLength > length)
+	{
+		while(beatBars.size()*beatLength > length)
+			popBarLine();
+	}
+	else if(internalLength < length)
+	{
+		while(beatBars.size()*beatLength <= length)
+			pushBarLine();
+	}
+
+	internalLength = length;
+	int size = pianoStrips.size();
+	for(int i=0;i<size;i++)
+		pianoStrips[i]->setGeometry(QRect(0,(size-i-1)*keyHeight,internalLength,keyHeight));
+}
+
 void LPianoPlain::setKeyHeight(int height)
 {
 	keyHeight = height;
+	resizeEvent(NULL);
+}
+
+void LPianoPlain::setAmplitude(float amp)
+{
+	displayAmpitude = amp;
 	resizeEvent(NULL);
 }
 
@@ -129,6 +170,7 @@ void LPianoPlain::pushKey()
 	pianoStrip->setBlackKey(isBlackKey);
 	pianoStrip->setBackgroundColor(backgroundColor);
 	pianoStrip->setbottomLineColor(bottomLineColor);
+	pianoStrip->setZValue(-1);
 
 	scene->addItem(pianoStrip);
 	pianoStrip->setGeometry(QRect(0,(index+1)*keyHeight,width(),keyHeight));
@@ -143,4 +185,24 @@ void LPianoPlain::popKey()
 	pianoStrips.pop_back();
 	delete pianoStrip;
 	resizeEvent(NULL);
+}
+
+void LPianoPlain::pushBarLine()
+{
+	int size = beatBars.size();
+	float xCoord = size*beatLength*displayAmpitude;
+	QGraphicsLineItem* item = new QGraphicsLineItem(xCoord,0,xCoord,keyNum()*keyHeight-1);
+	if(size%4 == 0)
+		item->setPen(QPen(QColor::fromHsv(0,0,77),1,Qt::SolidLine));
+	else
+		item->setPen(QPen(QColor::fromHsv(51,48,189),1,Qt::SolidLine));
+	scene->addItem(item);
+	beatBars.push_back(item);
+}
+
+void LPianoPlain::popBarLine()
+{
+	QGraphicsLineItem* bar = beatBars[beatBars.size()-1];
+	beatBars.pop_back();
+	delete bar;
 }

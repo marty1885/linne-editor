@@ -21,6 +21,8 @@ LPianoRoll::LPianoRoll(QWidget *parent) :
 
 	plain = new LPianoPlain(this);
 	plain->setKeyNum(72);
+	plain->setInternalLength(30000);
+	plain->setAmplitude(0.1);
 
 	verticalScrollBar = new QScrollBar(this);
 	verticalScrollBar->setGeometry(width()-12,0,12,height());
@@ -72,7 +74,7 @@ void LPianoRoll::onVerticalScrollbarValueChanged(int val)
 
 void LPianoRoll::onHorizontalScrollbarValueChanged(int val)
 {
-	plain->verticalScrollBar()->setValue(val);
+	plain->horizontalScrollBar()->setValue(val);
 }
 
 void LPianoRoll::onPianoPlainHoverChanged(int index)
