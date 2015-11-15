@@ -34,6 +34,7 @@ LPianoRoll::LPianoRoll(QWidget *parent) :
 	zoomSloder = new QSlider(Qt::Horizontal,this);
 	zoomSloder->setGeometry(width()-83,height()-12,width()-83,12);
 	zoomSloder->setMinimum(1);
+	zoomSloder->setMaximum(60);
 	zoomSloder->setValue(zoomSloder->maximum());
 
 	QObject::connect(verticalScrollBar,SIGNAL(valueChanged(int)),SLOT(onVerticalScrollbarValueChanged(int)));
@@ -43,6 +44,8 @@ LPianoRoll::LPianoRoll(QWidget *parent) :
 	QObject::connect(plain->verticalScrollBar(),SIGNAL(valueChanged(int)),SLOT(onPlainVerticalScrollbarValueChanged(int)));
 	QObject::connect(plain->horizontalScrollBar(),SIGNAL(valueChanged(int)),SLOT(onPlainHorizontalScrollbarValueChanged(int)));
 	QObject::connect(keyboard->verticalScrollBar(),SIGNAL(valueChanged(int)),SLOT(onPlainVerticalScrollbarValueChanged(int)));
+
+	zoomSloder->setValue(10);
 }
 
 
@@ -95,12 +98,9 @@ void LPianoRoll::onPianoPlainHoverChanged(int index)
 
 void LPianoRoll::onZoomSliderValueChanged(int val)
 {
-//	static float lastScale = 1.0f;
-//	float scaling = sqrt((float)val/zoomSloder->maximum());
-//	plain->scale(1/lastScale,1);
-//	plain->scale(scaling,1);
-//	lastScale = scaling;
-
+	static float lastScale = 1.0f;
+	float scaling = 1.0/val;
+	plain->setAmplitude(scaling);
 }
 
 void LPianoRoll::onPlainVerticalScrollbarValueChanged(int val)

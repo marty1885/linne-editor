@@ -1,8 +1,14 @@
 #include "LPianoPlain.h"
 #include <LGraphicsPianoStripItem.h>
+#include <LPianoNote.h>
 
 #include <QDebug>
 #include <QGraphicsLineItem>
+#include <QGraphicsProxyWidget>
+#include <QScrollBar>
+#include <QMouseEvent>
+
+#include <assert.h>
 
 const static int beatLength = 960;
 
@@ -13,6 +19,8 @@ LPianoPlain::LPianoPlain(QWidget *parent) :
 	keyHeight = 14;
 	internalLength = 1200;
 	displayAmpitude = 1.0f;
+	currentHover = 0;
+	quantization = 8;
 
 	setStyleSheet("QGraphicsView { border-style: none; }");
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -43,6 +51,16 @@ void LPianoPlain::resizeEvent(QResizeEvent *event)
 		beatBars[i]->setLine(xCoord,0,xCoord,keyNum()*keyHeight-1);
 	}
 
+	int noteSize = notes.size();
+	for(int i=0;i<noteSize;i++)
+	{
+		LNote note = notes[i];
+		pianoNotes[i]->setGeometry(note.location*displayAmpitude,
+				(note.pitch-keyOffset)*keyHeight,
+				note.length*displayAmpitude,
+				keyHeight);
+	}
+	//qDebug() << noteSize << displayAmpitude;
 
 	QGraphicsView::resizeEvent(event);
 	//qDebug() << verticalScrollBar()->maximum();
@@ -52,6 +70,62 @@ void LPianoPlain::leaveEvent(QEvent *event)
 {
 	emit mouseHoverChanged(-1);
 	QGraphicsView::leaveEvent(event);
+}
+
+void LPianoPlain::mousePressEvent(QMouseEvent *event)
+{
+	int xCoord = (horizontalScrollBar()->value() + event->x())*(1/displayAmpitude);
+	int yCoord = event->y() + verticalScrollBar()->value();
+	int size = pianoNotes.size();
+	QRect mousePoint(xCoord,yCoord,1,1);
+	bool overlap = false;
+	for(int i=0;i<size;i++)
+	{
+		QRect rect = pianoNotes[i]->geometry();
+		if(rect.intersects(mousePoint))
+		{
+			overlap = true;
+			break;
+		}
+	}
+
+	if(overlap == false)
+	{
+		int pitchId = pianoStrips.size()-(currentHover+1);
+		int quantizeLocation = beatLength*(4.0f/quantization);
+		LNote note;
+		note.length = 960;
+		note.location = (xCoord/quantizeLocation)*quantizeLocation;
+		note.lyric = "a";
+		note.pitch = pitchId;
+
+		QRect noteReagon(note.location,keyOffset,note.length,keyNum());
+		bool noteReagonOverlap = false;
+		for(int i=0;i<size;i++)
+		{
+			LNote n = notes[i];
+			QRect reagon(n.location,n.pitch+keyOffset-1,n.length,1);
+			if(noteReagon.intersects(reagon))
+			{
+				noteReagonOverlap = true;
+				break;
+			}
+		}
+
+		if(noteReagonOverlap == false)
+		{
+			LPianoNote* pianoNote = new LPianoNote;
+			pianoNote->setText(note.lyric);
+			pianoNote->setGeometry(note.location*displayAmpitude,
+					       (note.pitch-keyOffset)*keyHeight,
+					       note.length*displayAmpitude,
+					       keyHeight);
+			QGraphicsProxyWidget* widget = scene->addWidget(pianoNote);
+			notes.push_back(note);
+			pianoNotes.push_back(pianoNote);
+		}
+	}
+	QGraphicsView::mousePressEvent(event);
 }
 
 void LPianoPlain::setKeyNum(int num)
@@ -114,6 +188,13 @@ void LPianoPlain::setAmplitude(float amp)
 {
 	displayAmpitude = amp;
 	resizeEvent(NULL);
+	repaint();
+}
+
+void LPianoPlain::setQuantization(int quanti)
+{
+	assert(quanti%4 == 0);
+	quantization = quanti;
 }
 
 int LPianoPlain::keyNum()
@@ -136,6 +217,7 @@ void LPianoPlain::onPianoStripMouseHover()
 	QObject* senderPtr = QObject::sender();
 	LGraphicsPianoStripItem* sender = (LGraphicsPianoStripItem*)senderPtr;
 	int index = pianoStrips.indexOf(sender);
+	currentHover = index + keyOffset;
 	emit mouseHoverChanged(index);
 }
 
